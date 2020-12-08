@@ -1,5 +1,20 @@
+// Define se o jogo será player x player (true) ou player x computer (false).
+const pvp = false;
+
 let player = 1;
 let gameHistory = [];
+
+function computerRandom() {
+    const elements = document.querySelectorAll('.play-area div:empty');
+    if (elements[0]) {
+        const elem = elements[Math.floor(Math.random() * elements.length)];
+        elem.innerHTML = 'O';
+        gameHistory.push('O' + elem.id);
+        player = 1;
+        elem.removeEventListener('click', clickBlock);
+        checkResult();
+    }
+}
 
 function clickBlock (e) {
     const elem = e.target
@@ -15,7 +30,14 @@ function clickBlock (e) {
     }
 
     elem.removeEventListener('click', clickBlock);
-    checkResult();
+    if (checkResult()) {
+        return;
+    }
+
+    // Jogar automaticamente caso o jogo não seja pvp
+    if (!pvp && player === 2) {
+        computerRandom();
+    }
 }
 
 function checkResult () {
@@ -31,7 +53,14 @@ function checkResult () {
 
     if (!xResult && !yResult && gameHistory.length >= 9) {
         setWinner();
+        return true;
     }
+
+    if (xResult || yResult) {
+        return true;
+    }
+
+    return false;
 }
 
 function checkPlayerResult (history) {
@@ -105,6 +134,11 @@ function load () {
         elem.style.color = '';
         elem.addEventListener('click', clickBlock)
     });
+
+    // Fazer jogada, caso o player 2 inicie e não seja um jogo pvp
+    if (player === 2 && !pvp) {
+        computerRandom();
+    }
 }
 
 window.onload = function () {
