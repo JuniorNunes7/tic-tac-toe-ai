@@ -2,7 +2,7 @@
   "name": "tic-tac-toe-ai",
   "version": "1.0.0",
   "description": "It's a simple try to create a tic-tac-toe game using A.I.",
-  "main": "server.js",
+  "main": "app/server.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JuniorNunes7/tic-tac-toe-ai.git"
@@ -19,5 +19,10 @@
   "bugs": {
     "url": "https://github.com/JuniorNunes7/tic-tac-toe-ai/issues"
   },
-  "homepage": "https://github.com/JuniorNunes7/tic-tac-toe-ai#readme"
+  "homepage": "https://github.com/JuniorNunes7/tic-tac-toe-ai#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.5"
+  }
 }

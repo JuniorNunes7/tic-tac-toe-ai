@@ -1,3 +1,5 @@
+const baseUrl = 'http://localhost:8080';
+
 // Define se o jogo será player x player (true) ou player x computer (false).
 const pvp = false;
 
@@ -114,8 +116,10 @@ function checkPlayerResult (history) {
 function setWinner (player, places) {
     if (!player) {
         document.getElementById('winner').innerHTML = 'Deu velha!';
+        sendHistory('D', gameHistory.join(';'));
     } else {
         document.getElementById('winner').innerHTML = player + ' venceu!';
+        sendHistory(player, gameHistory.join(';'));
     }
 
     document.querySelectorAll('.play-area div').forEach(function(elem) {
@@ -146,6 +150,22 @@ function load () {
     if (player === 2 && !pvp) {
         computerRandom();
     }
+}
+
+function sendHistory (winner, steps) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", `${baseUrl}/register-history`, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+
+    let data = "";
+    const obj = { winner, steps };
+    for (let key in obj) {
+        if (data != "") {
+            data += "&";
+        }
+        data += key + "=" + encodeURIComponent(obj[key]);
+    }
+    xhr.send(data);
 }
 
 // Iniciar o jogo
