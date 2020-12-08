@@ -1,0 +1,23 @@
+{
+  "name": "tic-tac-toe-ai",
+  "version": "1.0.0",
+  "description": "It's a simple try to create a tic-tac-toe game using A.I.",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuniorNunes7/tic-tac-toe-ai.git"
+  },
+  "keywords": [
+    "tic-tac-toe",
+    "ai",
+    "game",
+    "jogo da velha",
+    "ia"
+  ],
+  "author": "Junior Nunes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JuniorNunes7/tic-tac-toe-ai/issues"
+  },
+  "homepage": "https://github.com/JuniorNunes7/tic-tac-toe-ai#readme"
+}
