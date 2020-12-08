@@ -4,6 +4,7 @@ const pvp = false;
 let player = 1;
 let gameHistory = [];
 
+// Jogadas automáticas e aleatórias do computador
 function computerRandom() {
     const elements = document.querySelectorAll('.play-area div:empty');
     if (elements[0]) {
@@ -16,6 +17,7 @@ function computerRandom() {
     }
 }
 
+// Marca o bloco e checa o resultado depois
 function clickBlock (e) {
     const elem = e.target
 
@@ -40,6 +42,7 @@ function clickBlock (e) {
     }
 }
 
+// Verifica o resultado
 function checkResult () {
     const xHistory = gameHistory.filter(function(entry) {
         return entry[0] === 'X';
@@ -63,6 +66,7 @@ function checkResult () {
     return false;
 }
 
+// Verifica o resultado do jogador
 function checkPlayerResult (history) {
     if (history.length === 0) return;
 
@@ -106,6 +110,7 @@ function checkPlayerResult (history) {
     return false;
 }
 
+// Define um vencedor ou empate
 function setWinner (player, places) {
     if (!player) {
         document.getElementById('winner').innerHTML = 'Deu velha!';
@@ -122,11 +127,13 @@ function setWinner (player, places) {
     }
 }
 
+// Reinicia o jogo
 function reset () {
     document.getElementById('winner').innerHTML = '';
     load();
 }
 
+// Carrega o jogo
 function load () {
     gameHistory = [];
     document.querySelectorAll('.play-area div').forEach(function(elem) {
@@ -141,10 +148,12 @@ function load () {
     }
 }
 
+// Iniciar o jogo
 window.onload = function () {
     load();    
 }
 
+// Groupby function
 // https://stackoverflow.com/a/34890276
 function groupBy (xs, key) {
     return xs.reduce(function(rv, x) {
