@@ -4,7 +4,47 @@ const History = require('./history.model');
 
 // Verifica e retorna as melhores possibilidades.
 router.get('/check', function(req, res) {
-    console.log('teste');
+    const query = req.query.history;
+    const step = (query.match(/;/g) || []).length;
+    History.aggregate([
+        {
+            $match: {
+            "steps": { "$regex": "^" + query }
+            }
+        },
+        {
+            $addFields: {
+            nextStep: {
+                $arrayElemAt: [ { $split: ["$steps", ";"] }, step+1 ]
+            }
+            }
+        },
+        {
+            $group: {
+            _id: "$nextStep",
+            winRate: {
+                $sum: {
+                $switch: {
+                    branches: [
+                    { case: { $eq: ["$winner", "O"] }, then: 1 },
+                    { case: { $eq: ["$winner", "X"] }, then: -1 },
+                    { case: { $eq: ["$winner", "D"] }, then: 0 }
+                    ]
+                }
+                }
+            }
+            }
+        }
+    ]).exec().then((result) => {
+        let moves = {};
+        for(let i in result) {
+            let r = result[i];
+            moves[r._id.substring(1)] = r.winRate;
+        }
+        console.log(moves);
+        res.end(JSON.stringify(moves));
+    });
+
 });
 
 // Verifica e retorna as melhores possibilidades.

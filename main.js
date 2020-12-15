@@ -40,7 +40,7 @@ function clickBlock (e) {
 
     // Jogar automaticamente caso o jogo não seja pvp
     if (!pvp && player === 2) {
-        computerRandom();
+        checkNextStep();
     }
 }
 
@@ -166,6 +166,37 @@ function sendHistory (winner, steps) {
         data += key + "=" + encodeURIComponent(obj[key]);
     }
     xhr.send(data);
+}
+
+function checkNextStep (callback) {
+    fetch(`${baseUrl}/check?history=${gameHistory.join(';')}`).then((result) => {
+        result.json().then((rates) => {
+            if (rates.length === 0) {
+                computerRandom();
+            } else {
+                const elements = document.querySelectorAll('.play-area div:empty');
+                const moves = {};
+                elements.forEach(function(x) {
+                    const move = x.id;
+                    moves[move] = (rates[move] ? rates[move] : 0);
+                });
+                
+                // https://stackoverflow.com/a/1069840/6101515
+                const sortable = Object.fromEntries(
+                    Object.entries(moves).sort(([,a],[,b]) => b-a)
+                );
+                console.log(sortable);
+                const first = Object.keys(sortable)[0];
+                
+                const elem = document.getElementById(first);
+                elem.innerHTML = 'O';
+                gameHistory.push('O' + first);
+                player = 1;
+                elem.removeEventListener('click', clickBlock);
+                checkResult();
+            }
+        });
+    });
 }
 
 // Iniciar o jogo
