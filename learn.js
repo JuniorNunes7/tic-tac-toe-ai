@@ -16,6 +16,7 @@ function setWinner (player, gameHistory) {
 
     History.countDocuments(data).then((count) => {
         if (count === 0) {
+            console.log('learning', data.steps);
             let history = new History(data);
             history.save();
         }

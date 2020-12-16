@@ -6,6 +6,10 @@ const History = require('./history.model');
 router.get('/check', function(req, res) {
     const query = req.query.history;
     const step = (query.match(/;/g) || []).length;
+    const startPlayer = query.charAt(0);
+    const winPoints = (startPlayer === 'O') ? 2 : 1;
+    const drawPoints = (startPlayer !== 'O') ? 2 : 0;
+
     History.aggregate([
         {
             $match: {
@@ -26,9 +30,9 @@ router.get('/check', function(req, res) {
                 $sum: {
                 $switch: {
                     branches: [
-                    { case: { $eq: ["$winner", "O"] }, then: 1 },
-                    { case: { $eq: ["$winner", "X"] }, then: -5 },
-                    { case: { $eq: ["$winner", "D"] }, then: 0 }
+                    { case: { $eq: ["$winner", "O"] }, then: winPoints },
+                    { case: { $eq: ["$winner", "X"] }, then: -1 },
+                    { case: { $eq: ["$winner", "D"] }, then: drawPoints }
                     ]
                 }
                 }
@@ -41,7 +45,6 @@ router.get('/check', function(req, res) {
             let r = result[i];
             moves[r._id.substring(1)] = r.winRate;
         }
-        console.log(moves);
         res.end(JSON.stringify(moves));
     }).catch((e) => {
         res.end('[]');
