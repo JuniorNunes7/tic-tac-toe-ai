@@ -15,7 +15,7 @@ function computerRandom() {
         gameHistory.push('O' + elem.id);
         player = 1;
         elem.removeEventListener('click', clickBlock);
-        checkResult();
+        checkResult(gameHistory);
     }
 }
 
@@ -34,7 +34,7 @@ function clickBlock (e) {
     }
 
     elem.removeEventListener('click', clickBlock);
-    if (checkResult()) {
+    if (checkResult(gameHistory)) {
         return;
     }
 
@@ -44,73 +44,7 @@ function clickBlock (e) {
     }
 }
 
-// Verifica o resultado
-function checkResult () {
-    const xHistory = gameHistory.filter(function(entry) {
-        return entry[0] === 'X';
-    });
-    const oHistory = gameHistory.filter(function(entry) {
-        return entry[0] === 'O';
-    });
 
-    const xResult = checkPlayerResult(xHistory);
-    const yResult = checkPlayerResult(oHistory);
-
-    if (!xResult && !yResult && gameHistory.length >= 9) {
-        setWinner();
-        return true;
-    }
-
-    if (xResult || yResult) {
-        return true;
-    }
-
-    return false;
-}
-
-// Verifica o resultado do jogador
-function checkPlayerResult (history) {
-    if (history.length === 0) return;
-
-    const player = history[0][0];
-
-    const entries = history.map(function(entry) {
-        return entry.substring(1);
-    });
-
-    const rowCount = groupBy(entries, 0);
-    const colCount = groupBy(entries, 1);
-    
-    // Verificando se o jogador ganhou em linha
-    for (let i in rowCount) {
-        if (rowCount[i].length === 3) {
-            setWinner(player, rowCount[i]);
-            return true;
-        }
-    }
-
-    // Verificando se o jogador ganhou em coluna
-    for (let i in colCount) {
-        if (colCount[i].length === 3) {
-            setWinner(player, colCount[i]);
-            return true;
-        }
-    }
-
-    // Verificando se o jogador ganhou em diagonal
-    if (entries.includes('A1') && entries.includes('B2') && entries.includes('C3')) {
-        setWinner(player, ['A1', 'B2', 'C3']);
-        return true;
-    }
-
-    // Verificando se o jogador ganhou em diagonal
-    else if (entries.includes('A3') && entries.includes('B2') && entries.includes('C1')) {
-        setWinner(player, ['A3', 'B2', 'C1']);
-        return true;
-    }
-
-    return false;
-}
 
 // Define um vencedor ou empate
 function setWinner (player, places) {
@@ -185,17 +119,20 @@ function checkNextStep (callback) {
                 const sortable = Object.fromEntries(
                     Object.entries(moves).sort(([,a],[,b]) => b-a)
                 );
-                console.log(sortable);
+
                 const first = Object.keys(sortable)[0];
-                
                 const elem = document.getElementById(first);
                 elem.innerHTML = 'O';
                 gameHistory.push('O' + first);
                 player = 1;
                 elem.removeEventListener('click', clickBlock);
-                checkResult();
+                checkResult(gameHistory);
             }
-        });
+        }).catch((e) => {
+            computerRandom();
+        });;
+    }).catch((e) => {
+        computerRandom();
     });
 }
 
@@ -203,12 +140,3 @@ function checkNextStep (callback) {
 window.onload = function () {
     load();    
 }
-
-// Groupby function
-// https://stackoverflow.com/a/34890276
-function groupBy (xs, key) {
-    return xs.reduce(function(rv, x) {
-      (rv[x[key]] = rv[x[key]] || []).push(x);
-      return rv;
-    }, {});
-};

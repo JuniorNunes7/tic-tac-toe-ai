@@ -27,7 +27,7 @@ router.get('/check', function(req, res) {
                 $switch: {
                     branches: [
                     { case: { $eq: ["$winner", "O"] }, then: 1 },
-                    { case: { $eq: ["$winner", "X"] }, then: -1 },
+                    { case: { $eq: ["$winner", "X"] }, then: -5 },
                     { case: { $eq: ["$winner", "D"] }, then: 0 }
                     ]
                 }
@@ -43,6 +43,8 @@ router.get('/check', function(req, res) {
         }
         console.log(moves);
         res.end(JSON.stringify(moves));
+    }).catch((e) => {
+        res.end('[]');
     });
 
 });
