@@ -14,8 +14,12 @@ function setWinner (player, gameHistory) {
     data.steps = gameHistory.join(';');
     data.winner = (player) ? player : 'D';
 
-    let history = new History(data);
-    history.save();
+    History.countDocuments(data).then((count) => {
+        if (count === 0) {
+            let history = new History(data);
+            history.save();
+        }
+    });
 }
 
 function checkBestChoice (player, steps) {
@@ -109,7 +113,6 @@ function doCheckedGame (player, gameHistory, availablePlaces) {
         if (!winner) {
             doCheckedGame(player, gameHistory, availablePlaces);
         } else {
-            console.log(winner);
             setWinner(winner, gameHistory);
         }
     });

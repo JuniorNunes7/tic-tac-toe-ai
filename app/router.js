@@ -51,17 +51,22 @@ router.get('/check', function(req, res) {
 
 // Verifica e retorna as melhores possibilidades.
 router.post('/register-history', function(req, res, next) {
-    let history = new History({
+    const data = {
         winner: req.body.winner,
         steps: req.body.steps
-    });
-
-    history.save(function (err) {
-        if (err) {
-            return next(err);
+    };
+    History.countDocuments(data).then((count) => {
+        if (count === 0) {
+            let history = new History(data);
+        
+            history.save(function (err) {
+                if (err) {
+                    return next(err);
+                }
+        
+                res.send(true);
+            });
         }
-
-        res.send(true);
     });
 });
 
