@@ -8,3 +8,7 @@ In this project I am using Node.js and MongoDB with the goal of learning these t
 
 #### Important
 This repository is used only for study purposes.
+
+## TODO
+- Organize project files.
+- Isolate game rules, routes, DB, etc.
